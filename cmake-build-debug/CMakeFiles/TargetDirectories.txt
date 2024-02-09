@@ -1,0 +1,3 @@
+/home/jamielinux/development/basics/transformation/cmake-build-debug/CMakeFiles/transformation.dir
+/home/jamielinux/development/basics/transformation/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/jamielinux/development/basics/transformation/cmake-build-debug/CMakeFiles/rebuild_cache.dir
