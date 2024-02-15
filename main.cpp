@@ -6,100 +6,108 @@
 #include <vector>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Shape.h"
-
-
-
+#include "Square.h"
+#include "Cube.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
 void processInput(GLFWwindow *window);
-glm::mat4 ViewMatrix;
-glm::mat4 ProjectionMatrix = glm::ortho(-5.0, 5.0, -5.0, 5.0);
-float Angle = 0.0f;
+int height = 800;
+int width = 800;
+glm::mat4 view = glm::mat4(1.0f);
+glm::mat4 ModelViewMatrix = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+glm::mat4 ProjectionMatrix = glm::perspective(glm::radians(40.0f), (float)width/(float)height, 0.1f, 200.0f);
+float Angle = 5.00f;
 
 int main() {
 
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-  if (window == NULL) {
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return -1;
-  }
-  glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-  // glad: load all OpenGL function pointers
-  // ---------------------------------------
-  if (glewInit()) {
-    std::cout << "Failed to initialize GLAD" << std::endl;
-    return -1;
-  }
-
-  Shader shader;
-  shader.load("basic", "../basicTransformations.vert", "../basicTransformations.frag");
-    std::vector<float> vertices = {
-            0.25f,  0.25f,  0.0f, 1.0f, 0.0f, 0.0f, // Top Right
-            0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
-            -0.25f, -0.25f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom Left
-            -0.25f,  0.25f, 0.0f, 1.0f, 1.0f, 0.0f, // Top Left
-    };
-  std::vector<unsigned int> indices = {
-      // note that we start from 0!
-      0, 1, 3, // first Triangle
-      1, 2, 3  // second Triangle
-  };
-
-
-  std::vector<float> vertices2 = {
-          -0.25f, 0.25f, 0.0f, 1.0f, 0.0f, 0.0f, // Top Right
-          -0.25f, 0.25f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
-          0.25f, 0.25f, 0.0f, 0.0f, 0.0f, 1.0f, // Bottom Left
-
-  };
-
-    std::vector<unsigned int> indices2 = {
-            // note that we start from 0!
-            0, 1, 3, // first Triangle
-    };
-
-  Shape one = {vertices, indices};
-  Shape two = {vertices2, indices2};
-
-  while (!glfwWindowShouldClose(window)) {
-    processInput(window);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    ViewMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-    glm::mat4 ModelViewMatrix = glm::rotate(ViewMatrix, Angle, glm::vec3(10, 0.0, 1.0));
-    one.draw(ProjectionMatrix, ModelViewMatrix, shader);
-    ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(1.0, 3.0, 0.0));
-    two.draw(ProjectionMatrix, ModelViewMatrix, shader);
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-
-    Angle += 0.05;
-    if (Angle >= 2.0*3.14159265) {
-        Angle = 0;
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    GLFWwindow *window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
+    if (window == NULL) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
     }
-  }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (glewInit()) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
+    Shader shader;
+    shader.load("basic", "../basicTransformations.vert", "../basicTransformations.frag");
+    float dim = 0.25f;
+    std::vector<float> verts{
+        //Vertex
+        -dim, -dim, -dim, 0.0, 0.0, 0.0, 1.0f, 1.0f,
+        -dim, dim, -dim, 0.0, 1.0, 0.0, 1.0f, 0.0f,
+        dim, dim, -dim, 0.0, 0.0, 1.0, 0.0f, 0.0f,
+        dim, -dim, -dim, 1.0, 1.0, 1.0, 1.0f, 1.0f,
+        -dim, -dim, dim, 1.0, 0.0, 0.0, 1.0f, 0.0f,
+        -dim, dim, dim, 0.0, 1.0, 0.0, 0.0f, 0.0f,
+        dim, dim, dim, 0.0, 0.0, 1.0, 1.0f, 1.0f,
+        dim, -dim, dim, 1.0, 1.0, 0.0, 0.0f, 0.0f};
 
 
+    std::vector<unsigned int> indicies = {0, 1, 2,
+                                          0, 2, 3,
+                                          4, 6, 5,
+                                          4, 7, 6,
+                                          1, 5, 6,
+                                          1, 6, 2,
+                                          0, 7, 4,
+                                          0, 3, 7,
+                                          0, 5, 1,
+                                          0, 4, 5,
+                                          3, 2, 7,
+                                          2, 6, 7};
 
-  glfwTerminate();
-  return 0;
+
+    Cube cube {verts, indicies};
+    glEnable(GL_DEPTH_TEST);
+    std::vector<glm::vec3> cubePositions = {
+            glm::vec3( 0.0f,  0.0f,  0.0f),
+            glm::vec3( 2.0f,  5.0f, -15.0f),
+            glm::vec3(-1.5f, -2.2f, -2.5f),
+            glm::vec3(-3.8f, -2.0f, -12.3f),
+            glm::vec3( 2.4f, -0.4f, -3.5f),
+            glm::vec3(-1.7f,  3.0f, -7.5f),
+            glm::vec3( 1.3f, -2.0f, -2.5f),
+            glm::vec3( 1.5f,  2.0f, -2.5f),
+            glm::vec3( 1.5f,  0.2f, -1.5f),
+            glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        cube.draw(ProjectionMatrix, shader, cubePositions);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
+    }
+
+
+    glfwTerminate();
+    return 0;
 }
 
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
 }
 
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-  glViewport(0, 0, width, height);
-  ProjectionMatrix = glm::ortho(-5.0, 5.0, -5.0, 5.0);
+    glViewport(0, 0, width, height);
+    ProjectionMatrix = glm::perspective(glm::radians(40.0f), (float)width/(float)height, 0.1f, 200.0f);
+
 }

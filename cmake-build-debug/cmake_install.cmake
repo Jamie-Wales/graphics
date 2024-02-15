@@ -1,4 +1,4 @@
-# Install script for directory: /home/jamielinux/development/basics/transformation
+# Install script for directory: /home/jamielinux/development/basics/svcube
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jamielinux/development/basics/transformation/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jamielinux/development/basics/svcube/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
